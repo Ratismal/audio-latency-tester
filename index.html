@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>title</title>
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>Audio Latency Tester</h1>
+
+
+    <button @click.prevent="start" v-if="!started">Start Listening</button>
+    <button @click.prevent="stop" v-else>Stop Listening</button>
+
+    <label>Input Device</label>
+    <select v-model="inputId" :disabled="started">
+      <option v-for="device of inputDevices" :key="device.deviceId" :value="device.deviceId">
+        {{ device.label }}
+      </div>
+    </select>
+    <label>Output Device</label>
+    <select v-model="outputId" :disabled="started">
+      <option v-for="device of outputDevices" :key="device.deviceId" :value="device.deviceId">
+        {{ device.label }}
+      </div>
+    </select>
+
+    {{ volume }}
+    <div class="volume-container">
+      <div v-for="volume, ii of volumes" :key="ii" class="volume-bar" :class="{ selected: i - 1 === ii }">
+        <div class="indicator" :style="{height: volume * 300 + 'px'}"></div>
+      </div>
+    </div>
+
+    <div class="latency">
+      Your latency is {{ latency }}ms
+    </div>
+
+    <div class="message-wrapper">
+      <div v-for="message, i of messages" :key="i" class="message">
+        {{ message }}        
+      </div>
+    </div>
+  </div>
+
+  <script src="audio.js" type="text/javascript"></script>
+</body>
+</html>

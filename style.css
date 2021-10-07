@@ -1,0 +1,26 @@
+.volume-container {
+  height: 300px;
+
+  border: 1px solid black;
+  width: 1000px;
+}
+
+.volume-bar {
+  display: inline-block;
+  height: 100%;
+
+  position: relative;
+  width: 1px;
+}
+
+.volume-bar.selected {
+  background: green;
+}
+
+
+.volume-bar .indicator {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: red;
+}
