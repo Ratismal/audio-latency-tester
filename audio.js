@@ -16,7 +16,7 @@ const app = new Vue({
       stream: undefined,
 
       started: false,
-      state: { context: null, source: null, node: null, oscillator: null, amp: null },
+      state: { context: null, source: null, node: null, oscillator: null, amp: null, audio: null },
       volume: 0,
 
       i: 0,
@@ -47,6 +47,8 @@ const app = new Vue({
   },
   methods: {
     async start() {
+      await this.getUserMedia();
+
       this.volumes = [];
       this.i = 0;
       this.messages = [];
@@ -64,12 +66,21 @@ const app = new Vue({
       amp.gain.value = 0;
 
       oscillator.connect(amp);
-      amp.connect(context.destination);
       oscillator.start(0);
 
       await context.audioWorklet.addModule('processor.js')
 
       const source = context.createMediaStreamSource(this.stream);
+      const dest = context.createMediaStreamDestination(this.stream);
+
+      const audio = new Audio();
+
+      amp.connect(dest);
+
+      console.log(dest.stream);
+      audio.srcObject = dest.stream;
+      audio.setSinkId(this.outputId);
+      audio.play();
 
       const node = new MyWorkletNode(context);
 
@@ -201,7 +212,7 @@ const app = new Vue({
     },
     async getUserMedia() {
       const constraints = {
-        audio: { deviceId:  undefined }
+        audio: { deviceId: this.inputId ? { exact: this.inputId } : undefined }
       }
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
